@@ -2,10 +2,27 @@ import data from "../data.json" assert{type: 'json'};
 
 const dataContainer = document.getElementById("data-container");
 
+let roles = [];
+let levels = [];
+let languajes = [];
+let tolss = [];
+
 const load = data => {
     dataContainer.innerHTML = ""; // Se vacia el contenedor para que no se vayan acumulando las categorias filtradas 
 
     data.forEach(card => {
+        if(!roles.includes(card.role)) roles.push(card.role);
+
+        if(!levels.includes(card.level)) levels.push(card.level);
+
+        for(const language of card.languages){
+            if(!languajes.includes(language)) languajes.push(language);
+        }
+
+        for(const tool of card.tools){
+            if(!tolss.includes(tool)) tolss.push(tool);
+        }
+        
         // Mapeo de cada una de las cards
         const div = document.createElement("div");
         let filters = [];
@@ -74,4 +91,29 @@ const load = data => {
 }
 
 load(data);
+
+/****** CARDS FILTER ******/
+
+const categoryBtns = document.querySelectorAll(".category--card");
+
+categoryBtns.forEach(btn => {
+    btn.addEventListener("click", event => {
+        const categorySelected = event.target.firstChild.data; // Obtencion del nombre de la categoria
+        console.log(categorySelected);
+        let cardsSelected;
+
+        if(roles.includes(categorySelected)){
+            cardsSelected = data.filter(card => card.role === categorySelected);
+        } else if(levels.includes(categorySelected)){
+            cardsSelected = data.filter(card => card.level === categorySelected);
+        } else if(languajes.includes(categorySelected)){
+            cardsSelected = data.filter(card => card.languages.includes(categorySelected));
+        } else {
+            cardsSelected = data.filter(card => card.tools.includes(categorySelected));
+        }
+        
+        load(cardsSelected);
+    })
+});
+
 
