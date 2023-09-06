@@ -237,7 +237,7 @@ body{
     align-items: center;
 }
 
-.skill--name{
+.skill-name{
     background-color: var(--light-grayish-cyan-background);
     font-family: 'League Spartan', sans-serif;
     font-size: 17px;
@@ -247,6 +247,13 @@ body{
     border-radius: 3px;
     padding: 6px;
     outline: none;
+}
+
+.skill-name:is(:hover, :focus){
+    background-color: var(--desaturated-dark-cyan);
+    color: var(--light-grayish-cyan-filter-tablets);
+    cursor: pointer;
+
 }
 
 @media (min-width: 1000px){

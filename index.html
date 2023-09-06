@@ -10,106 +10,64 @@
 <body>
     <header class="header">
         <div class="container__header">
-            <div class="container__header--filter">
-                <div class="filter">
-                    <span class="filter--name">Frontend</span>
-                    <button class="filter-close">X</button>
-                </div>
-                <div class="filter">
-                    <span class="filter--name">CSS</span>
-                    <button class="filter-close">X</button>
-                </div>
-
-                <div class="filter">
-                    <span class="filter--name">JavaScript</span>
-                    <button class="filter-close">X</button>
-                </div>
+            <div id="box-filter" class="container__header--filter">
+                <!-- Inicio Filtros insertados en JS (Modelo de un filtro) --> 
+                    <!-- <div class="filter">
+                        <span class="filter--name">Frontend</span>
+                        <button class="filter-close">X</button>
+                    </div> -->
+                <!-- Fin Filtros insertados en JS -->
             </div>
             <div class="container__header--clear">
                 <button id="btn-clear">Clear</button>
             </div>
         </div>
     </header>
-    <main class="main__container">
-        <div class="card__container">
-            <div class="card__container-logo">
-                <img src="./assets/img/photosnap.svg" alt="logo-photosnap">
-            </div>
-            <div class="card__container-info">
-                <div class="card__container-info--title">
-                    <p>Photosnap</p>
-                    <div class="card__container-info--boolean">
-                        <p class="new">new!</p>
-                        <p class="featured">featured</p>
+    <main id="cards-container" class="main__container">
+        <!-- Inicio codigo a insertar en JS (Modelo de una card) --> 
+        <!--  
+            <div class="card__container">
+                <div class="card__container-logo">
+                    <img src="./assets/img/photosnap.svg" alt="logo-photosnap">
+                </div>
+                <div class="card__container-info">
+                    <div class="card__container-info--title">
+                        <p>Photosnap</p>
+                        <div class="card__container-info--boolean">
+                            <p class="new">new!</p>
+                            <p class="featured">featured</p>
+                        </div>
+                    </div>
+                    <div class="card__container-info--position">
+                        <p>Senior Frontend Developer</p>
+                    </div>
+                    <div class="card__container-info--conditions">
+                        <p>1d ago</p>
+                        <div class="separator"></div>
+                        <p>Full Time</p>
+                        <div class="separator"></div>
+                        <p>USA only</p>
                     </div>
                 </div>
-                <div class="card__container-info--position">
-                    <p>Senior Frontend Developer</p>
-                </div>
-                <div class="card__container-info--conditions">
-                    <p>1d ago</p>
-                    <div class="separator"></div>
-                    <p>Full Time</p>
-                    <div class="separator"></div>
-                    <p>USA only</p>
-                </div>
-            </div>
-            <div class="card__container-skills">
-                <div class="skill">
-                    <button class="skill--name">Frontend</button>
-                </div>
-                <div class="skill">
-                    <button class="skill--name">Senior</button>
-                </div>
-                <div class="skill">
-                    <button class="skill--name">HTML</button>
-                </div>
-                <div class="skill">
-                    <button class="skill--name">CSS</button>
-                </div>
-                <div class="skill">
-                    <button class="skill--name">JavaScript</button>
-                </div>
-            </div>
-        </div>
-        <div class="card__container">
-            <div class="card__container-logo">
-                <img src="./assets/img/myhome.svg" alt="logo-my-home">
-            </div>
-            <div class="card__container-info">
-                <div class="card__container-info--title">
-                    <p>MyHome</p>
-                    <div class="card__container-info--boolean">
-                        <!-- <p class="new">new!</p>
-                        <p class="featured">featured</p> -->
+                <div class="card__container-skills">
+                    <div class="skill">
+                        <button class="skill--name">Frontend</button>
+                    </div>
+                    <div class="skill">
+                        <button class="skill--name">Senior</button>
+                    </div>
+                    <div class="skill">
+                        <button class="skill--name">HTML</button>
+                    </div>
+                    <div class="skill">
+                        <button class="skill--name">CSS</button>
+                    </div>
+                    <div class="skill">
+                        <button class="skill--name">JavaScript</button>
                     </div>
                 </div>
-                <div class="card__container-info--position">
-                    <p>Junior Frontend Developer</p>
-                </div>
-                <div class="card__container-info--conditions">
-                    <p>5d ago</p>
-                    <div class="separator"></div>
-                    <p>Contract</p>
-                    <div class="separator"></div>
-                    <p>USA only</p>
-                </div>
-            </div>
-            <div class="card__container-skills">
-                <div class="skill">
-                    <button class="skill--name">Frontend</button>
-                </div>
-                <div class="skill">
-                    <button class="skill--name">Junior</button>
-                </div>
-                <div class="skill">
-                    <button class="skill--name">CSS</button>
-                </div>
-                <div class="skill">
-                    <button class="skill--name">JavaScript</button>
-                </div>
-            </div>
-        </div>
+            </div> -->
+            <!-- Fin codigo a insertar en JS -->
     </main>
     <script type="module" src="./js/main.js"></script>
 </body>

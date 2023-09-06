@@ -1,137 +1,110 @@
-// import data from "../data.json" assert{type: 'json'};
+import data from '../data.json' assert{type: 'json'};
 
-// const dataContainer = document.getElementById("data-container");
+const cardsContainer = document.getElementById('cards-container');
+const boxFilter = document.getElementById('box-filter');
+const clearBtn = document.getElementById('btn-clear');
 
-// const load = data => {
-//     dataContainer.innerHTML = ""; // Se vacia el contenedor para que no se vayan acumulando las categorias filtradas 
+const load = cardsChoosen => {
+        cardsContainer.innerHTML = '';
 
-//     data.forEach(card => {
-//         // Mapeo de cada una de las cards
-//         const div = document.createElement("div");
-//         div.classList.add("container-card");
-        
-//         div.innerHTML = `
-//             <img class="card__logo" src="${card.logo}" alt="${card.company}">
-//             <div class="card__container-info">
-//                 <div class="card__container-info--name">
-//                     <p class="card__container-info--name--text">${card.company}</p>
-//                     <div class="card__container-info--characteristics">
-//                         <p class="card__container-info--characteristics--new">New!</p> 
-//                         <p class="card__container-info--characteristics--featured">Featured</p>
-//                     </div>
-//                 </div>
-//                 <div class="card__container-info--job">
-//                     <p>${card.position}</p>
-//                 </div>
-//                 <div class="card__container-info--requirement">
-//                     <p>${card.postedAt}</p>
-//                     <div class="separator"></div>
-//                     <p>${card.contract}</p>
-//                     <div class="separator"></div>
-//                     <p>${card.location}</p>
-//                 </div>
-//             </div>
-//             <div class="container-categories__categories--card">
-//                 <button class="category--card">
-//                     <p class="category__text--card">${card.role}</p>
-//                 </button>
-//                 <button class="category--card">
-//                     <p class="category__text--card">${card.level}</p>
-//                 </button>
-//             </div>
-//         `;
-        
-//         dataContainer.appendChild(div);
+        cardsChoosen.forEach(card => {
+                cardsContainer.innerHTML += `
+                        <div class="card__container">
+                                <div class="card__container-logo">
+                                        <img src="${card.logo}" alt="logo-${card.company}">
+                                </div>
+                                <div class="card__container-info">
+                                        <div class="card__container-info--title">
+                                                <p>${card.company}</p>
+                                                <div class="card__container-info--boolean">
+                                                        <p class="new">new!</p>
+                                                        <p class="featured">featured</p>
+                                                </div>
+                                        </div>
+                                        <div class="card__container-info--position">
+                                                <p>${card.position}</p>
+                                        </div>
+                                        <div class="card__container-info--conditions">
+                                                <p>${card.postedAt}</p>
+                                                <div class="separator"></div>
+                                                <p>${card.contract}</p>
+                                                <div class="separator"></div>
+                                                <p>${card.location}</p>
+                                        </div>
+                                </div>
+                                <div class="card__container-skills">
+                                        <div class="skill">
+                                                <button name="${card.role}" class="skill-name">${card.role}</button>
+                                        </div>
+                                        <div class="skill">
+                                                <button name="${card.level}" class="skill-name">${card.level}</button>
+                                        </div>
+                                        ${card.languages.map(language => `
+                                                <div class="skill">
+                                                        <button name="${language}" class="skill-name">${language}</button>
+                                                </div>
+                                        `).join('')}
+                                        ${card.tools.map(tool => `
+                                                <div class="skill">
+                                                        <button name="${tool}" class="skill-name">${tool}</button>
+                                                </div>
+                                        `).join('')}
+                                </div>
+                        </div>
+                `;
+                
+        });
+}
 
-//         // let categoriesContainer = document.querySelectorAll(".container-categories__categories--card");
-//         // console.log(categoriesContainer);
+load(data);
 
-//         // for(const language of card.languages){
-//         //     const button = document.createElement("button");
-//         //     button.classList.add("category--card");
-//         //     button.innerHTML = `<p class="category__text--card">${language}</p>`;
-//         //     categoriesContainer.appendChild(button);
-//         // }
+const filterCardBtns = document.querySelectorAll(".skill-name");
 
-        
-        
-        
-//         // let nuevo = document.querySelector(".card__container-info--characteristics--new");
-//         // if(card.new) nuevo.classList.add("active");
-//         // console.log(nuevo);
-//     });
+filterCardBtns.forEach(btn => {
+        btn.addEventListener("click", event => {
+                let roles = [], levels = [], languages = [], tools = [];
+                
+                for(const employee of data){
+                        if(!roles.includes(employee.role)) roles.push(employee.role); 
 
-    
-//     // let featured = document.querySelectorAll(".card__container-info--characteristics--featured");
-//     // let languagesTools = document.querySelectorAll(".container-categories__categories--card");
+                        if(!levels.includes(employee.level)) levels.push(employee.level);
 
-//     // console.log(nuevo);
-//     // console.log(featured);
-//     // console.log(languagesTools);
+                        for(const language of employee.languages){
+                                if(!languages.includes(language)) languages.push(language);
+                        }
 
-//     // if(card.new) nuevo[card.id-1].classList.add("active");
+                        for(const tool of employee.tools){
+                                if(!tools.includes(tool)) tools.push(tool);
+                        }
+                }
 
-//     // if(card.featured) featured[card.id-1].classList.add("active");
+                let cardsSelected = [];
 
-//     // let skills = card.languages.concat(card.tools);
-        
-//     // for(const skill of skills){
-//     //     const button = document.createElement("button");
-//     //     button.classList.add("category--card");
+                if(roles.includes(event.currentTarget.name)){
+                        cardsSelected = data.filter(card => card.role === event.currentTarget.name);
+                } else if(levels.includes(event.currentTarget.name)){
+                        cardsSelected = data.filter(card => card.level === event.currentTarget.name);
+                } else if(languages.includes(event.currentTarget.name)){
+                        cardsSelected = data.filter(card => card.languages.includes(event.currentTarget.name));
+                } else {
+                        cardsSelected = data.filter(card => card.tools.includes(event.currentTarget.name));
+                }
 
-//     //     button.innerHTML = `<p class="category__text--card">${skill}</p>`;
+                console.log(cardsSelected);
 
-//     //     languagesTools[card.id-1].append(button);
-//     // }
-// }
+                boxFilter.innerHTML += `
+                                        <div class="filter">
+                                                <span class="filter--name">${event.currentTarget.name}</span>
+                                                <button class="filter-close">X</button>
+                                        </div>
+                                        `;
+                
+                
+                // load(cardsSelected);
+                // console.log(cardsSelected);
+        })
+});
 
-// load(data);
-
-// /****** CARDS FILTER ******/
-
-// const categoryBtns = document.querySelectorAll(".category--card");
-// let filters = [];
-
-// categoryBtns.forEach(btn => {
-//     btn.addEventListener("click", event => {
-//         let newFilter = event.target.firstChild.data;
-//         filters.push(newFilter);
-//     //     let cardsSelected;
-//     console.log(filters);
-
-        
-        
-        
-//     //     let categorySelected = event.target.firstChild.data; // Obtencion del nombre de la categoria
-//     //     console.log(categorySelected);
-
-//     //     if(roles.includes(categorySelected)){
-//     //         cardsSelected = data.filter(card => card.role === categorySelected);
-//     //     } else {
-//     //         cardsSelected = data.filter(card => card.level === categorySelected);
-//     //     }
-
-//     //     load(cardsSelected);
-
-//     //     console.log(roles.includes(categorySelected));
-//     //     console.log(cardsSelected);
-//     })
-// });
-
-
-
-
-
-
-
-// if(!roles.includes(card.role)) roles.push(card.role);
-
-        // if(!levels.includes(card.level)) levels.push(card.level);
-
-        // for(const language of card.languages){
-        //     if(!languajes.includes(language)) languajes.push(language);
-        // }
-
-        // for(const tool of card.tools){
-        //     if(!tolss.includes(tool)) tolss.push(tool);
-        // }
+clearBtn.addEventListener("click", () => {
+        boxFilter.innerHTML = '';
+})
