@@ -68,6 +68,11 @@ body{
     margin-left: 6%;
     margin-right: 6%;
     border-radius: 5px;
+    visibility: hidden;
+}
+
+.container__header.active{
+    visibility: visible;
 }
 
 .container__header--filter{

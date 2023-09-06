@@ -2,6 +2,7 @@ import data from '../data.json' assert{type: 'json'};
 
 const cardsContainer = document.getElementById('cards-container');
 const boxFilter = document.getElementById('box-filter');
+const boxFilterContainer = document.getElementById('box-filter-container');
 const clearBtn = document.getElementById('btn-clear');
 
 const load = cardsChoosen => {
@@ -17,8 +18,8 @@ const load = cardsChoosen => {
                                         <div class="card__container-info--title">
                                                 <p>${card.company}</p>
                                                 <div class="card__container-info--boolean">
-                                                        <p class="new">new!</p>
-                                                        <p class="featured">featured</p>
+                                                        ${card.new ? `<p class="new">new!</p>` : `<p></p>`}
+                                                        ${card.featured ? `<p class="featured">featured</p>` : `<p></p>`}
                                                 </div>
                                         </div>
                                         <div class="card__container-info--position">
@@ -54,6 +55,8 @@ const load = cardsChoosen => {
                 `;
                 
         });
+
+        console.log(cardsContainer);
 }
 
 load(data);
@@ -92,6 +95,8 @@ filterCardBtns.forEach(btn => {
 
                 console.log(cardsSelected);
 
+                boxFilterContainer.classList.add("active");
+
                 boxFilter.innerHTML += `
                                         <div class="filter">
                                                 <span class="filter--name">${event.currentTarget.name}</span>
@@ -106,5 +111,6 @@ filterCardBtns.forEach(btn => {
 });
 
 clearBtn.addEventListener("click", () => {
+        boxFilterContainer.classList.remove("active");
         boxFilter.innerHTML = '';
 })
