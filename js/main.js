@@ -1,16 +1,38 @@
 import data from '../data.json' assert{type: 'json'};
 
-const cardsContainer = document.getElementById('cards-container');
-const boxFilter = document.getElementById('box-filter');
+/*-----------------------------------------------------------------*\
+        #SE COLOCA A CADA FILTRO EN SU CATEGORIA CORRESPONDIENTE
+\*-----------------------------------------------------------------*/
+
+let roles = [], levels = [], languages = [], tools = [];
+                        
+for(const employee of data){
+        if(!roles.includes(employee.role)) roles.push(employee.role); 
+        
+        if(!levels.includes(employee.level)) levels.push(employee.level);
+        
+        for(const language of employee.languages){
+                if(!languages.includes(language)) languages.push(language);
+        }
+        
+        for(const tool of employee.tools){
+                if(!tools.includes(tool)) tools.push(tool);
+        }
+}
+
 const boxFilterContainer = document.getElementById('box-filter-container');
+const boxFilter = document.getElementById('box-filter');
 const clearBtn = document.getElementById('btn-clear');
+const cardsContainer = document.getElementById('cards-container');
 
 const load = cardsChoosen => {
         cardsContainer.innerHTML = '';
-
+        
         cardsChoosen.forEach(card => {
-                cardsContainer.innerHTML += `
-                        <div class="card__container">
+                const div = document.createElement("div");
+                div.classList.add("card__container");
+                
+                div.innerHTML = `
                                 <div class="card__container-logo">
                                         <img src="${card.logo}" alt="logo-${card.company}">
                                 </div>
@@ -51,66 +73,60 @@ const load = cardsChoosen => {
                                                 </div>
                                         `).join('')}
                                 </div>
-                        </div>
-                `;
+                        `;
                 
+                cardsContainer.append(div);
         });
-
-        console.log(cardsContainer);
 }
 
 load(data);
 
 const filterCardBtns = document.querySelectorAll(".skill-name");
+let tags = [];
+let cardsSelected = [...data];
 
 filterCardBtns.forEach(btn => {
         btn.addEventListener("click", event => {
-                let roles = [], levels = [], languages = [], tools = [];
+                if(!tags.includes(event.currentTarget.name)){
+                        tags.push(event.currentTarget.name);
+                        boxFilter.innerHTML += ` <div class="filter">
+                                                        <span class="filter--name">${event.currentTarget.name}</span>
+                                                        <button class="filter-close">X</button>
+                                                </div>`;
+                }
                 
-                for(const employee of data){
-                        if(!roles.includes(employee.role)) roles.push(employee.role); 
-
-                        if(!levels.includes(employee.level)) levels.push(employee.level);
-
-                        for(const language of employee.languages){
-                                if(!languages.includes(language)) languages.push(language);
-                        }
-
-                        for(const tool of employee.tools){
-                                if(!tools.includes(tool)) tools.push(tool);
+                if(tags.length === 1) boxFilterContainer.classList.add("active"); 
+                
+                for (let tag of tags) {
+                        if (roles.includes(tag)) {
+                                cardsSelected = cardsSelected.filter((card) => card.role === tag);
+                        } else if (levels.includes(tag)) {
+                                cardsSelected = cardsSelected.filter((card) => card.level === tag);
+                        } else if (languages.includes(tag)) {
+                                cardsSelected = cardsSelected.filter((card) => card.languages.includes(tag));
+                        } else {
+                                cardsSelected = cardsSelected.filter((card) => card.tools.includes(tag));
                         }
                 }
-
-                let cardsSelected = [];
-
-                if(roles.includes(event.currentTarget.name)){
-                        cardsSelected = data.filter(card => card.role === event.currentTarget.name);
-                } else if(levels.includes(event.currentTarget.name)){
-                        cardsSelected = data.filter(card => card.level === event.currentTarget.name);
-                } else if(languages.includes(event.currentTarget.name)){
-                        cardsSelected = data.filter(card => card.languages.includes(event.currentTarget.name));
-                } else {
-                        cardsSelected = data.filter(card => card.tools.includes(event.currentTarget.name));
-                }
-
-                console.log(cardsSelected);
-
-                boxFilterContainer.classList.add("active");
-
-                boxFilter.innerHTML += `
-                                        <div class="filter">
-                                                <span class="filter--name">${event.currentTarget.name}</span>
-                                                <button class="filter-close">X</button>
-                                        </div>
-                                        `;
                 
-                
-                // load(cardsSelected);
-                // console.log(cardsSelected);
-        })
+                load(cardsSelected);
+        });
 });
+
+
+
+const filterCloseBtns = document.querySelectorAll(".filter-close");
+
+// filterCloseBtns.forEach(btn => {
+//         console.log(btn);
+//         btn.addEventListener("click", event => {
+//                 console.log(event);
+//         })
+// });
+
 
 clearBtn.addEventListener("click", () => {
         boxFilterContainer.classList.remove("active");
         boxFilter.innerHTML = '';
+        tags = [];
 })
