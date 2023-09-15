@@ -25,6 +25,8 @@ const boxFilter = document.getElementById('box-filter');
 const clearBtn = document.getElementById('btn-clear');
 const cardsContainer = document.getElementById('cards-container');
 
+let tags = [];
+
 const load = cardsChoosen => {
         cardsContainer.innerHTML = '';
         
@@ -77,56 +79,44 @@ const load = cardsChoosen => {
                 
                 cardsContainer.append(div);
         });
+
+        const filterCardBtns = document.querySelectorAll(".skill-name");
+        let cardsSelected = [...data];
+        
+        filterCardBtns.forEach(btn => {
+                btn.addEventListener("click", event => {
+                        if(!tags.includes(event.currentTarget.name)){
+                                tags.push(event.currentTarget.name);
+                                boxFilter.innerHTML += ` <div class="filter">
+                                                                <span class="filter--name">${event.currentTarget.name}</span>
+                                                                <button class="filter-close">X</button>
+                                                        </div>`;
+                        }
+                
+                        if(tags.length === 1) boxFilterContainer.classList.add("active"); 
+                
+                        for (let tag of tags) {
+                                if (roles.includes(tag)) {
+                                        cardsSelected = cardsSelected.filter((card) => card.role === tag);
+                                } else if (levels.includes(tag)) {
+                                        cardsSelected = cardsSelected.filter((card) => card.level === tag);
+                                } else if (languages.includes(tag)) {
+                                        cardsSelected = cardsSelected.filter((card) => card.languages.includes(tag));
+                                } else {
+                                        cardsSelected = cardsSelected.filter((card) => card.tools.includes(tag));
+                                }
+                        }
+                        
+                        load(cardsSelected);
+                });
+        });
 }
 
 load(data);
-
-const filterCardBtns = document.querySelectorAll(".skill-name");
-let tags = [];
-let cardsSelected = [...data];
-
-filterCardBtns.forEach(btn => {
-        btn.addEventListener("click", event => {
-                if(!tags.includes(event.currentTarget.name)){
-                        tags.push(event.currentTarget.name);
-                        boxFilter.innerHTML += ` <div class="filter">
-                                                        <span class="filter--name">${event.currentTarget.name}</span>
-                                                        <button class="filter-close">X</button>
-                                                </div>`;
-                }
-                
-                if(tags.length === 1) boxFilterContainer.classList.add("active"); 
-                
-                for (let tag of tags) {
-                        if (roles.includes(tag)) {
-                                cardsSelected = cardsSelected.filter((card) => card.role === tag);
-                        } else if (levels.includes(tag)) {
-                                cardsSelected = cardsSelected.filter((card) => card.level === tag);
-                        } else if (languages.includes(tag)) {
-                                cardsSelected = cardsSelected.filter((card) => card.languages.includes(tag));
-                        } else {
-                                cardsSelected = cardsSelected.filter((card) => card.tools.includes(tag));
-                        }
-                }
-                
-                load(cardsSelected);
-        });
-});
-
-
-
-const filterCloseBtns = document.querySelectorAll(".filter-close");
-
-// filterCloseBtns.forEach(btn => {
-//         console.log(btn);
-//         btn.addEventListener("click", event => {
-//                 console.log(event);
-//         })
-// });
-
 
 clearBtn.addEventListener("click", () => {
         boxFilterContainer.classList.remove("active");
         boxFilter.innerHTML = '';
         tags = [];
+        load(data);
 })
