@@ -5,11 +5,9 @@ const boxFilter = document.getElementById('box-filter');
 const clearBtn = document.getElementById('btn-clear');
 const cardsContainer = document.getElementById('cards-container');
 
-/*-----------------------------------------------------------------*\
-        #SE COLOCA A CADA FILTRO EN SU CATEGORIA CORRESPONDIENTE
-\*-----------------------------------------------------------------*/
-
 let roles = [], levels = [], languages = [], tools = [], tags = [];
+
+/********** Place each filter in its corresponding category **********/
 
 const placeSkillsInCategory = data => {
         for(const employee of data){
@@ -27,6 +25,8 @@ const placeSkillsInCategory = data => {
         }
 }
 
+/********** Check that the filter is no longer applied and add it to the filter box **********/
+
 const checkAndAdd = (filters, filter) => {
         if(!filters.includes(filter)){
                 filters.push(filter);
@@ -38,6 +38,8 @@ const checkAndAdd = (filters, filter) => {
         
         if(filters.length === 1) boxFilterContainer.classList.add("active");
 }
+
+/********** Filter cards by each of the selected filters **********/
 
 const filterBy = filters => {
         let filteredCards = [...data];
@@ -54,6 +56,8 @@ const filterBy = filters => {
         }
         return filteredCards;
 }
+
+/********** Load selected cards **********/
 
 const load = cardsChoosen => {
         cardsContainer.innerHTML = '';
@@ -134,15 +138,14 @@ const load = cardsChoosen => {
                         tags = tags.filter(tag => tag !== filterName);
                         cardsSelected = filterBy(tags);
                         
-                        boxFilter.removeChild(containerFilterSelected); // Se elimina el contenedor del filtro (nombre y boton X) de la caja de filtros
+                        boxFilter.removeChild(containerFilterSelected); // Filter container (name and X button) is removed from the filter box
 
-                        if(tags.length === 0) boxFilterContainer.classList.remove("active"); // Se oculta la caja de filtros porque no hay filtros aplicados
+                        if(tags.length === 0) boxFilterContainer.classList.remove("active"); // Hide the filter box (no filters applied)
                         
                         load(cardsSelected);
                 })
         });
 }
-
 
 clearBtn.addEventListener("click", () => {
         boxFilterContainer.classList.remove("active");
@@ -152,6 +155,9 @@ clearBtn.addEventListener("click", () => {
 })
 
 
-/// Ejecucion del programa;
+/*------------------------------*\
+        #PROGRAM EXECUTION
+\*------------------------------*/
+
 placeSkillsInCategory(data);
 load(data);
