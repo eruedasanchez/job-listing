@@ -1,31 +1,59 @@
 import data from '../data.json' assert{type: 'json'};
 
-/*-----------------------------------------------------------------*\
-        #SE COLOCA A CADA FILTRO EN SU CATEGORIA CORRESPONDIENTE
-\*-----------------------------------------------------------------*/
-
-let roles = [], levels = [], languages = [], tools = [];
-                        
-for(const employee of data){
-        if(!roles.includes(employee.role)) roles.push(employee.role); 
-        
-        if(!levels.includes(employee.level)) levels.push(employee.level);
-        
-        for(const language of employee.languages){
-                if(!languages.includes(language)) languages.push(language);
-        }
-        
-        for(const tool of employee.tools){
-                if(!tools.includes(tool)) tools.push(tool);
-        }
-}
-
 const boxFilterContainer = document.getElementById('box-filter-container');
 const boxFilter = document.getElementById('box-filter');
 const clearBtn = document.getElementById('btn-clear');
 const cardsContainer = document.getElementById('cards-container');
 
-let tags = [];
+/*-----------------------------------------------------------------*\
+        #SE COLOCA A CADA FILTRO EN SU CATEGORIA CORRESPONDIENTE
+\*-----------------------------------------------------------------*/
+
+let roles = [], levels = [], languages = [], tools = [], tags = [];
+
+const placeSkillsInCategory = data => {
+        for(const employee of data){
+                if(!roles.includes(employee.role)) roles.push(employee.role); 
+                
+                if(!levels.includes(employee.level)) levels.push(employee.level);
+                
+                for(const language of employee.languages){
+                        if(!languages.includes(language)) languages.push(language);
+                }
+                
+                for(const tool of employee.tools){
+                        if(!tools.includes(tool)) tools.push(tool);
+                }
+        }
+}
+
+const checkAndAdd = (filters, filter) => {
+        if(!filters.includes(filter)){
+                filters.push(filter);
+                boxFilter.innerHTML += ` <div id="${filter}" class="filter">
+                                                <span class="filter--name">${filter}</span>
+                                                <button class="filter-close" name="${filter}">X</button>
+                                        </div>`;
+        }
+        
+        if(filters.length === 1) boxFilterContainer.classList.add("active");
+}
+
+const filterBy = filters => {
+        let filteredCards = [...data];
+        for (let filter of filters) {
+                if (roles.includes(filter)) {
+                        filteredCards = filteredCards.filter((card) => card.role === filter);
+                } else if (levels.includes(filter)) {
+                        filteredCards = filteredCards.filter((card) => card.level === filter);
+                } else if (languages.includes(filter)) {
+                        filteredCards = filteredCards.filter((card) => card.languages.includes(filter));
+                } else {
+                        filteredCards = filteredCards.filter((card) => card.tools.includes(filter));
+                }
+        }
+        return filteredCards;
+}
 
 const load = cardsChoosen => {
         cardsContainer.innerHTML = '';
@@ -80,39 +108,41 @@ const load = cardsChoosen => {
                 cardsContainer.append(div);
         });
 
+        /***** Filter cards by tags *****/
+        
         const filterCardBtns = document.querySelectorAll(".skill-name");
-        let cardsSelected = [...data];
+        let cardsSelected = [];
         
         filterCardBtns.forEach(btn => {
                 btn.addEventListener("click", event => {
-                        if(!tags.includes(event.currentTarget.name)){
-                                tags.push(event.currentTarget.name);
-                                boxFilter.innerHTML += ` <div class="filter">
-                                                                <span class="filter--name">${event.currentTarget.name}</span>
-                                                                <button class="filter-close">X</button>
-                                                        </div>`;
-                        }
-                
-                        if(tags.length === 1) boxFilterContainer.classList.add("active"); 
-                
-                        for (let tag of tags) {
-                                if (roles.includes(tag)) {
-                                        cardsSelected = cardsSelected.filter((card) => card.role === tag);
-                                } else if (levels.includes(tag)) {
-                                        cardsSelected = cardsSelected.filter((card) => card.level === tag);
-                                } else if (languages.includes(tag)) {
-                                        cardsSelected = cardsSelected.filter((card) => card.languages.includes(tag));
-                                } else {
-                                        cardsSelected = cardsSelected.filter((card) => card.tools.includes(tag));
-                                }
-                        }
-                        
+                        const filterName = event.currentTarget.name;
+                        checkAndAdd(tags, filterName);
+                        cardsSelected = filterBy(tags);
                         load(cardsSelected);
                 });
         });
+
+        /***** Remove filters according to indicated tag *****/
+
+        const filterCloseBtns = document.querySelectorAll(".filter-close");
+
+        filterCloseBtns.forEach(btn => {
+                btn.addEventListener("click", () => {
+                        const filterName = btn.name;
+                        const containerFilterSelected = document.getElementById(`${filterName}`);
+                        
+                        tags = tags.filter(tag => tag !== filterName);
+                        cardsSelected = filterBy(tags);
+                        
+                        boxFilter.removeChild(containerFilterSelected); // Se elimina el contenedor del filtro (nombre y boton X) de la caja de filtros
+
+                        if(tags.length === 0) boxFilterContainer.classList.remove("active"); // Se oculta la caja de filtros porque no hay filtros aplicados
+                        
+                        load(cardsSelected);
+                })
+        });
 }
 
-load(data);
 
 clearBtn.addEventListener("click", () => {
         boxFilterContainer.classList.remove("active");
@@ -120,3 +150,8 @@ clearBtn.addEventListener("click", () => {
         tags = [];
         load(data);
 })
+
+
+/// Ejecucion del programa;
+placeSkillsInCategory(data);
+load(data);
