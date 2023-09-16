@@ -147,13 +147,16 @@ body{
     position: relative;
     height: auto;
     background-color: white;
-    border-left: 6px solid var(--desaturated-dark-cyan);
     border-radius: 5px;
     margin-left: 6%;
     margin-right: 6%;
     margin-top: 20px;
     margin-bottom: 70px;
     padding: 30px 20px;
+}
+
+.border-dark-cyan{
+    border-left: 6px solid var(--desaturated-dark-cyan);
 }
 
 .card__container-logo{

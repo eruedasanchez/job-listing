@@ -65,6 +65,8 @@ const load = cardsChoosen => {
         cardsChoosen.forEach(card => {
                 const div = document.createElement("div");
                 div.classList.add("card__container");
+
+                if(card.new && card.featured) div.classList.add("border-dark-cyan");
                 
                 div.innerHTML = `
                                 <div class="card__container-logo">
